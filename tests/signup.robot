@@ -28,14 +28,7 @@ Campo nome deve ser obrigatorio
 
     Start signup form
     Submit signup form   ${account}
-
-    Wait For Elements State
-    ...    css=form .notice
-    ...    visible    5
-    
-    Get Text    css=form .notice
-    ...    equal
-    ...    Por favor informe o seu nome completo
+    Notice shold be    Por favor informe o seu nome completo
 
 Campo email deve ser obrigatorio
     [Tags]    emailObrigatorio    
@@ -45,14 +38,7 @@ Campo email deve ser obrigatorio
 
     Start signup form
     Submit signup form   ${account}
-
-    Wait For Elements State
-    ...    css=form .notice
-    ...    visible    5
-    
-    Get Text    css=form .notice
-    ...    equal
-    ...    Por favor, informe o seu melhor e-mail
+    Notice shold be    Por favor, informe o seu melhor e-mail
 
 
 Campo cpf deve ser obrigatorio
@@ -63,14 +49,7 @@ Campo cpf deve ser obrigatorio
 
     Start signup form
     Submit signup form    ${account}
-
-    Wait For Elements State
-    ...    css=form .notice
-    ...    visible    5
-    
-    Get Text    css=form .notice
-    ...    equal
-    ...    Por favor, informe o seu CPF
+    Notice shold be    Por favor, informe o seu CPF
 
 Campo email invalido
     [Tags]    inv    email
@@ -80,14 +59,7 @@ Campo email invalido
 
     Start signup form
     Submit signup form    ${account}
-
-    Wait For Elements State
-    ...    css=form .notice
-    ...    visible    5
-    
-    Get Text    css=form .notice
-    ...    equal
-    ...    Oops! O email informado é inválido      
+    Notice shold be    Oops! O email informado é inválido      
 
 Campo CPF invalido
     [Tags]    inv    cpf
@@ -97,14 +69,7 @@ Campo CPF invalido
 
     Start signup form
     Submit signup form    ${account}
-
-    Wait For Elements State
-    ...    css=form .notice
-    ...    visible    5
-    
-    Get Text    css=form .notice
-    ...    equal
-    ...    Oops! O CPF informado é inválido      
+    Notice shold be       Oops! O CPF informado é inválido      
 
 *** Keywords ***
 Start signup form
@@ -122,3 +87,16 @@ Submit signup form
     Fill Text    id=cpf         ${account}[cpf]
     
     Click        css=button >> text=Cadastrar
+
+Notice shold be
+    [Arguments]    ${target}
+
+    ${element}    Set Variable    css=form .notice
+
+    Wait For Elements State
+    ...    ${element}
+    ...    visible    5
+    
+    Get Text    ${element}
+    ...    equal
+    ...    ${target}    
