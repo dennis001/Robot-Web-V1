@@ -76,7 +76,7 @@ Campo email deve ser obrigatorio
     
     Get Text    css=form .notice
     ...    equal
-    ...    Por favor informe o seu melhor e-mail
+    ...    Por favor, informe o seu melhor e-mail
 
 
 Campo cpf deve ser obrigatorio
@@ -102,7 +102,7 @@ Campo cpf deve ser obrigatorio
     
     Get Text    css=form .notice
     ...    equal
-    ...    Por favor informe o seu cpf
+    ...    Por favor, informe o seu CPF
 
 Campo email invalido
     [Tags]    inv    email
