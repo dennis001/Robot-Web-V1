@@ -2,26 +2,18 @@
 Documentation    Cenarios de testes de pré-cadastro de Clientes
 
 Library    Browser
+Library    Collections
 
 Resource   ../resources/base.resource
 
 *** Test Cases ***
 Deve iniciar o cadastro do cliente
+    [Tags]    cadastroCliente
     
     ${account}    Get Fake Account
 
-    New Browser    browser=chromium    headless=False
-    New Page    http://localhost:3000
-
-    Get Text    css=#signup h2
-    ...    equal
-    ...    Faça seu cadastro e venha para a Smartbit!
-
-    Fill Text    id=name        ${account}[name]
-    Fill Text    id=email       ${account}[email]
-    Fill Text    id=document    ${account}[document]
-    # Click        xpath=//button[text()="Cadastrar"]
-    Click        css=button >> text=Cadastrar
+    Start signup form
+    Submit signup form    ${account}
 
     Wait For Elements State
     ...    text=Falta pouco para fazer parte da família Smartbit!
@@ -29,21 +21,13 @@ Deve iniciar o cadastro do cliente
 
 
 Campo nome deve ser obrigatorio
-    [Tags]    required
+    [Tags]    nomeObrigatorio
     
     ${account}    Get Fake Account
+    Set To Dictionary    ${account}    name    ${EMPTY}
 
-    New Browser    browser=chromium    headless=False
-    New Page    http://localhost:3000
-
-    Get Text    css=#signup h2
-    ...    equal
-    ...    Faça seu cadastro e venha para a Smartbit!
-
-    Fill Text    id=email       ${account}[email]
-    Fill Text    id=document    ${account}[document]
-    # Click        xpath=//button[text()="Cadastrar"]
-    Click        css=button >> text=Cadastrar
+    Start signup form
+    Submit signup form   ${account}
 
     Wait For Elements State
     ...    css=form .notice
@@ -54,21 +38,13 @@ Campo nome deve ser obrigatorio
     ...    Por favor informe o seu nome completo
 
 Campo email deve ser obrigatorio
-    [Tags]    required
+    [Tags]    emailObrigatorio    
     
     ${account}    Get Fake Account
+    Set To Dictionary    ${account}    email    ${EMPTY}
 
-    New Browser    browser=chromium    headless=False
-    New Page    http://localhost:3000
-
-    Get Text    css=#signup h2
-    ...    equal
-    ...    Faça seu cadastro e venha para a Smartbit!
-    
-    Fill Text    id=name        ${account}[name]
-    Fill Text    id=document    ${account}[document]
-    # Click        xpath=//button[text()="Cadastrar"]
-    Click        css=button >> text=Cadastrar
+    Start signup form
+    Submit signup form   ${account}
 
     Wait For Elements State
     ...    css=form .notice
@@ -80,21 +56,13 @@ Campo email deve ser obrigatorio
 
 
 Campo cpf deve ser obrigatorio
-    [Tags]    required
+    [Tags]    cpfObrigatorio
     
     ${account}    Get Fake Account
+    Set To Dictionary    ${account}    cpf    ${EMPTY}
 
-    New Browser    browser=chromium    headless=False
-    New Page    http://localhost:3000
-
-    Get Text    css=#signup h2
-    ...    equal
-    ...    Faça seu cadastro e venha para a Smartbit!
-    
-    Fill Text    id=name        ${account}[name]
-    Fill Text    id=email       ${account}[email]
-    # Click        xpath=//button[text()="Cadastrar"]
-    Click        css=button >> text=Cadastrar
+    Start signup form
+    Submit signup form    ${account}
 
     Wait For Elements State
     ...    css=form .notice
@@ -108,19 +76,10 @@ Campo email invalido
     [Tags]    inv    email
     
     ${account}    Get Fake Account
+    Set To Dictionary    ${account}    email    test%test;com
 
-    New Browser    browser=chromium    headless=False
-    New Page    http://localhost:3000
-
-    Get Text    css=#signup h2
-    ...    equal
-    ...    Faça seu cadastro e venha para a Smartbit!
-    
-    Fill Text    id=name        ${account}[name]
-    Fill Text    id=email       teste%teste,com;br
-    Fill Text    id=document    ${account}[document]
-    # Click        xpath=//button[text()="Cadastrar"]
-    Click        css=button >> text=Cadastrar
+    Start signup form
+    Submit signup form    ${account}
 
     Wait For Elements State
     ...    css=form .notice
@@ -134,19 +93,10 @@ Campo CPF invalido
     [Tags]    inv    cpf
     
     ${account}    Get Fake Account
+    Set To Dictionary    ${account}    cpf    0029381937a
 
-    New Browser    browser=chromium    headless=False
-    New Page    http://localhost:3000
-
-    Get Text    css=#signup h2
-    ...    equal
-    ...    Faça seu cadastro e venha para a Smartbit!
-    
-    Fill Text    id=name        ${account}[name]
-    Fill Text    id=email       ${account}[email]
-    Fill Text    id=document    00293819373
-    # Click        xpath=//button[text()="Cadastrar"]
-    Click        css=button >> text=Cadastrar
+    Start signup form
+    Submit signup form    ${account}
 
     Wait For Elements State
     ...    css=form .notice
@@ -155,3 +105,20 @@ Campo CPF invalido
     Get Text    css=form .notice
     ...    equal
     ...    Oops! O CPF informado é inválido      
+
+*** Keywords ***
+Start signup form
+    New Browser    browser=chromium    headless=False
+    New Page    http://localhost:3000
+
+Submit signup form 
+    [Arguments]    ${account}
+
+    Get Text    css=#signup h2
+    ...    equal
+    ...    Faça seu cadastro e venha para a Smartbit!
+    Fill Text    id=name        ${account}[name]
+    Fill Text    id=email       ${account}[email]
+    Fill Text    id=cpf         ${account}[cpf]
+    
+    Click        css=button >> text=Cadastrar
