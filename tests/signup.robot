@@ -1,10 +1,12 @@
 *** Settings ***
 Documentation    Cenarios de testes de pré-cadastro de Clientes
 
-Library    Browser
 Library    Collections
 
-Resource   ../resources/base.resource
+Resource   ../resources/Base.resource
+
+Test Setup       Start signup form
+Test Teardown    Take Screenshot
 
 *** Test Cases ***
 Deve iniciar o cadastro do cliente
@@ -12,12 +14,8 @@ Deve iniciar o cadastro do cliente
     
     ${account}    Get Fake Account
 
-    Start signup form
     Submit signup form    ${account}
-
-    Wait For Elements State
-    ...    text=Falta pouco para fazer parte da família Smartbit!
-    ...    visible    5
+    Verificar welcome message
 
 
 Campo nome deve ser obrigatorio
@@ -26,16 +24,9 @@ Campo nome deve ser obrigatorio
     ${account}    Get Fake Account
     Set To Dictionary    ${account}    name    ${EMPTY}
 
-    Start signup form
     Submit signup form   ${account}
+    Notice should be    Por favor informe o seu nome completo
 
-    Wait For Elements State
-    ...    css=form .notice
-    ...    visible    5
-    
-    Get Text    css=form .notice
-    ...    equal
-    ...    Por favor informe o seu nome completo
 
 Campo email deve ser obrigatorio
     [Tags]    emailObrigatorio    
@@ -43,16 +34,8 @@ Campo email deve ser obrigatorio
     ${account}    Get Fake Account
     Set To Dictionary    ${account}    email    ${EMPTY}
 
-    Start signup form
     Submit signup form   ${account}
-
-    Wait For Elements State
-    ...    css=form .notice
-    ...    visible    5
-    
-    Get Text    css=form .notice
-    ...    equal
-    ...    Por favor, informe o seu melhor e-mail
+    Notice should be    Por favor, informe o seu melhor e-mail
 
 
 Campo cpf deve ser obrigatorio
@@ -61,16 +44,8 @@ Campo cpf deve ser obrigatorio
     ${account}    Get Fake Account
     Set To Dictionary    ${account}    cpf    ${EMPTY}
 
-    Start signup form
     Submit signup form    ${account}
-
-    Wait For Elements State
-    ...    css=form .notice
-    ...    visible    5
-    
-    Get Text    css=form .notice
-    ...    equal
-    ...    Por favor, informe o seu CPF
+    Notice should be    Por favor, informe o seu CPF
 
 Campo email invalido
     [Tags]    inv    email
@@ -78,16 +53,9 @@ Campo email invalido
     ${account}    Get Fake Account
     Set To Dictionary    ${account}    email    test%test;com
 
-    Start signup form
     Submit signup form    ${account}
-
-    Wait For Elements State
-    ...    css=form .notice
-    ...    visible    5
-    
-    Get Text    css=form .notice
-    ...    equal
-    ...    Oops! O email informado é inválido      
+    Notice should be    Oops! O email informado é inválido   
+  
 
 Campo CPF invalido
     [Tags]    inv    cpf
@@ -95,30 +63,5 @@ Campo CPF invalido
     ${account}    Get Fake Account
     Set To Dictionary    ${account}    cpf    0029381937a
 
-    Start signup form
     Submit signup form    ${account}
-
-    Wait For Elements State
-    ...    css=form .notice
-    ...    visible    5
-    
-    Get Text    css=form .notice
-    ...    equal
-    ...    Oops! O CPF informado é inválido      
-
-*** Keywords ***
-Start signup form
-    New Browser    browser=chromium    headless=False
-    New Page    http://localhost:3000
-
-Submit signup form 
-    [Arguments]    ${account}
-
-    Get Text    css=#signup h2
-    ...    equal
-    ...    Faça seu cadastro e venha para a Smartbit!
-    Fill Text    id=name        ${account}[name]
-    Fill Text    id=email       ${account}[email]
-    Fill Text    id=cpf         ${account}[cpf]
-    
-    Click        css=button >> text=Cadastrar
+    Notice should be       Oops! O CPF informado é inválido  
