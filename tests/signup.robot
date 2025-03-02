@@ -17,51 +17,23 @@ Deve iniciar o cadastro do cliente
     Submit signup form    ${account}
     Verificar welcome message
 
+Tentativa de pré-cadastro
+    [Template]    Attempt signup    
 
-Campo nome deve ser obrigatorio
-    [Tags]    nomeObrigatorio
-    
-    ${account}    Get Fake Account
-    Set To Dictionary    ${account}    name    ${EMPTY}
+    ${EMPTY}         stella_porto@bfgadvogados.com         67384726174         Por favor informe o seu nome completo
+    Stella Malu      ${EMPTY}                              67384726174         Por favor, informe o seu melhor e-mail
+    Stella Malu      stella_porto@bfgadvogados.com         ${EMPTY}            Por favor, informe o seu CPF
+    Stella Malu      test%test;com                         67384726174         Oops! O email informado é inválido
+    Stella Malu      stella_porto@bfgadvogados.com         0029381937a         Oops! O CPF informado é inválido
 
-    Submit signup form   ${account}
-    Notice should be    Por favor informe o seu nome completo
+*** Keywords ***
+Attempt signup
+    [Arguments]    ${name}    ${email}    ${cpf}    ${output_message}
 
-
-Campo email deve ser obrigatorio
-    [Tags]    emailObrigatorio    
-    
-    ${account}    Get Fake Account
-    Set To Dictionary    ${account}    email    ${EMPTY}
-
-    Submit signup form   ${account}
-    Notice should be    Por favor, informe o seu melhor e-mail
-
-
-Campo cpf deve ser obrigatorio
-    [Tags]    cpfObrigatorio
-    
-    ${account}    Get Fake Account
-    Set To Dictionary    ${account}    cpf    ${EMPTY}
+    ${account}    Create Dictionary    
+    ...    name=${name}    
+    ...    email=${email}    
+    ...    cpf=${cpf}
 
     Submit signup form    ${account}
-    Notice should be    Por favor, informe o seu CPF
-
-Campo email invalido
-    [Tags]    inv    email
-    
-    ${account}    Get Fake Account
-    Set To Dictionary    ${account}    email    test%test;com
-
-    Submit signup form    ${account}
-    Notice should be    Oops! O email informado é inválido   
-  
-
-Campo CPF invalido
-    [Tags]    inv    cpf
-    
-    ${account}    Get Fake Account
-    Set To Dictionary    ${account}    cpf    0029381937a
-
-    Submit signup form    ${account}
-    Notice should be       Oops! O CPF informado é inválido  
+    Notice should be    ${output_message}
