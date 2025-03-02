@@ -5,7 +5,7 @@ Library    Collections
 
 Resource   ../resources/Base.resource
 
-Test Setup       Start signup form
+Test Setup       Start session
 Test Teardown    Take Screenshot
 
 *** Test Cases ***
