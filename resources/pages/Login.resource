@@ -13,10 +13,3 @@ Submit login form
     Fill Text    css=input[name=email]       ${email}
     Fill Text    css=input[name=password]    ${password}
     Click        css=button >> text=Entrar
-
-Toast should be
-    [Arguments]    ${expect_message}
-
-    ${element}    Set Variable    css=.Toastify__toast-body
-    Wait For Elements State    ${element}    Visible    5
-    Get Text    ${element}    equal    ${expect_message}

@@ -28,4 +28,24 @@ Tentativa de login com email invalido
     Submit login form    sasuke@smartbit.com    pwd123
     Toast should be      As credenciais de acesso fornecidas são inválidas. Tente novamente!
     
+Dados de login Invalidos
+    [Template]    Login with invalid credentials
+
+    ${EMPTY}            ${EMPTY}      Os campos email e senha são obrigatórios.
+    ${EMPTY}            pwd123        Os campos email e senha são obrigatórios.
+    sac@smartbit.com    ${EMPTY}      Os campos email e senha são obrigatórios.
+    www.Sac.com.br      pwd123        Oops! O email informado é inválido
+    5678987654'''       pwd123        Oops! O email informado é inválido
+    !@#$%¨&**&¨%$#      pwd123        Oops! O email informado é inválido
+    sfhajflagajgnk      pwd123        Oops! O email informado é inválido
+    E!R#ÈOE`PÊ@#        pwd123        Oops! O email informado é inválido
+    Gmail@.com          pwd123        Oops! O email informado é inválido
+
+
+*** Keywords ***
+Login with invalid credentials
+    [Arguments]          ${email}    ${password}    ${output_message}
+    Go to login page
+    Submit login form    ${email}    ${password}
+    Notice should be    ${output_message}
     
