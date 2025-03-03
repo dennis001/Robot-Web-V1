@@ -17,6 +17,8 @@ Deve iniciar o cadastro do cliente
     Submit signup form    ${account}
     Verificar welcome message
 
+    Delete Account By Email    ${account}[email]
+
 Tentativa de pré-cadastro
     [Template]    Attempt signup    
 
