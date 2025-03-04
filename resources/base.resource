@@ -16,3 +16,9 @@ Resource             pages/components/BoxNotice.resource
 Start session
     New Browser    browser=chromium    headless=False
     New Page    http://localhost:3000
+
+
+Get log html
+    Sleep    2
+    ${html}    Get Page Source
+    Log    ${html}
