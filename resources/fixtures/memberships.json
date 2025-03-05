@@ -1,0 +1,17 @@
+{
+    "create": {
+        "account": {
+            "name": "Guilherme Rocha",
+            "email": "guilherme@rocha.com.br",
+            "cpf": "731.096.842-50"
+        },
+        "plan": "Plano Black",
+        "credit_card": {
+            "number": "5398817270510296",
+            "holder": "Guilherme Rocha",
+            "month": "10",
+            "year": "2026",
+            "cvv": "752"
+        }
+    }
+}
