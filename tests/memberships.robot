@@ -21,8 +21,36 @@ Deve poder realizar uma nova adesão
 Não deve realizar adesão duplicada
     [Tags]    duplicada
 
-    ${data}    Get Json fixture    memberships    create
+    ${data}    Get Json fixture    memberships    duplicate
+    
+    Insert Membership    ${data}
+
     SignIn admin
     Go to memberships
     Create new membership      ${data}
     Toast should be            O usuário já possui matrícula.
+
+Deve buscar por nome
+    [Tags]    search
+
+    ${data}    Get Json fixture    memberships    search
+
+    Insert Membership    ${data}
+
+    SignIn admin
+    Go to memberships 
+    Search by name           ${data}[account][name]
+    Should filter by name    ${data}[account][name]
+
+Deve excluir uma matricula
+    [Tags]    remove
+
+    ${data}    Get Json fixture    memberships    remove
+
+    Insert Membership    ${data}
+
+    SignIn admin
+    Go to memberships
+    Request removal                      ${data}[account][name]
+    Confirm removal
+    Membership should not be visible     ${data}[account][name]
