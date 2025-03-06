@@ -5,10 +5,71 @@
             "email": "guilherme@rocha.com.br",
             "cpf": "731.096.842-50"
         },
-        "plan": "Plano Black",
+        "plan": {
+            "name": "Plano Black",
+            "id": 2,
+            "price": 79.99
+        },
         "credit_card": {
             "number": "5398817270510296",
             "holder": "Guilherme Rocha",
+            "month": "10",
+            "year": "2026",
+            "cvv": "752"
+        }
+    },
+    "duplicate": {
+        "account": {
+            "name": "Anderson Cauã Assis",
+            "email": "anderson@rocha.com.br",
+            "cpf": "265.766.346-09"
+        },
+        "plan": {
+            "name": "Plano Smart",
+            "id": 1,
+            "price": 99.99
+        },
+        "credit_card": {
+            "number": "5398817270510296",
+            "holder": "Anderson Cauã Assis",
+            "month": "10",
+            "year": "2026",
+            "cvv": "752"
+        }
+    },
+    "search": {
+        "account": {
+            "name": "Mariana da Silva",
+            "email": "Mariana@rocha.com.br",
+            "cpf": "499.801.467-61"
+        },
+        "plan": {
+            "name": "Plano Smart",
+            "id": 1,
+            "price": 99.99
+        },
+        "credit_card": {
+            "number": "5398817270510296",
+            "holder": "Mariana da Silva",
+            "month": "10",
+            "year": "2026",
+            "cvv": "752"
+        }
+    },
+    "remove": {
+        "account": {
+            "name": "Raimunda Isabelle da Rocha",
+            "email": "raimunda@rocha.com.br",
+            "cpf": "034.990.413-83"
+        },
+        "plan": {
+            "name": "Plano Smart",
+            "id": 1,
+            "price": 99.99
+        },
+        "credit_card": {
+            "number": "5398817270510296",
+            "holder": "Raimunda Isabelle da Rocha",
             "month": "10",
             "year": "2026",
             "cvv": "752"
