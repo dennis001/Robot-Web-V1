@@ -1,0 +1,84 @@
+name: Run Robot Framework Tests
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do código da automação
+        uses: actions/checkout@v4
+
+      - name: Clonar o repositório SmartBeat
+        run: git clone https://github.com/dennis001/Ambiente-Robot-Web-V1.git smartbit
+
+      - name: Instalar dependências do Docker e Docker Compose
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y docker-compose
+
+      - name: Subir os serviços do SmartBeat (Postgres e PGAdmin)
+        run: |
+          cd smartbit
+          docker-compose up -d
+          echo "Aguardando os serviços subirem..."
+          sleep 20
+
+      - name: Verificar se os containers estão rodando
+        run: docker ps -a
+
+      - name: Instalar dependências da API
+        run: |
+          cd smartbit/api
+          npm install
+
+      - name: Instalar dependências da Web
+        run: |
+          cd smartbit/web
+          npm install
+
+      - name: Rodar o setup da API
+        run: |
+          cd smartbit/api
+          chmod +x setup.sh
+          ./setup.sh
+
+      - name: Subir a API
+        run: |
+          cd smartbit/api
+          nohup npm run dev &
+
+      - name: Subir a Web
+        run: |
+          cd smartbit/web
+          nohup npm run dev &
+
+      - name: Aguardar os serviços da API e Web subirem
+        run: sleep 20
+
+      - name: Verificar logs da API e Web
+        run: docker logs $(docker ps -q --filter "name=api") || echo "API não está rodando"
+      
+      - name: Instalar dependências do Robot Framework
+        run: |
+          pip install robotframework
+          pip install -r requirements.txt
+
+      - name: Executar os testes automatizados
+        run: robot -d results tests/
+
+      - name: Upload dos resultados dos testes
+        uses: actions/upload-artifact@v4
+        with:
+          name: robot-results
+          path: results/
+
+      - name: Derrubar os containers do SmartBeat
+        run: |
+          cd SmartBeat
+          docker-compose down
