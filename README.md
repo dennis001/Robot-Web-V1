@@ -13,6 +13,16 @@ Este é o projeto inicial de automação utilizando Robot Framework. O objetivo 
 
 - `libs/Account.py`: Script Python que gera dados de conta fictícios utilizando a biblioteca Faker.
 
+## Instalação das Dependências
+
+1. Certifique-se de ter o Python instalado.
+2. Navegue até o diretório do projeto.
+3. Execute o comando:
+
+```sh
+pip install -r requirements.txt
+```
+
 ## Como Executar os Testes
 
 1. Certifique-se de ter o Robot Framework instalado.
