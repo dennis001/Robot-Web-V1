@@ -11,79 +11,117 @@ jobs:
     name: Checkout do código da automação
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-
-  clone_smartbeat:
-    name: Clonar o repositório SmartBeat
-    runs-on: ubuntu-latest
-    needs: checkout
-    steps:
-      - uses: actions/checkout@v4
-      - run: git clone https://github.com/dennis001/Ambiente-Robot-Web-V1.git smartbit
+      - name: Checkout do repositório principal
+        uses: actions/checkout@v4
+      - name: Clonar o repositório SmartBeat
+        run: git clone https://github.com/dennis001/Ambiente-Robot-Web-V1.git smartbit
+      - name: Upload do código clonado
+        uses: actions/upload-artifact@v4
+        with:
+          name: smartbit-code
+          path: smartbit
 
   setup_docker:
     name: Instalar Docker e subir serviços
     runs-on: ubuntu-latest
-    needs: clone_smartbeat
+    needs: checkout
     steps:
-      - uses: actions/checkout@v4
-      - run: git clone https://github.com/dennis001/Ambiente-Robot-Web-V1.git smartbit
-      - run: |
+      - name: Baixar código clonado
+        uses: actions/download-artifact@v4
+        with:
+          name: smartbit-code
+          path: .
+      - name: Instalar Docker e Docker Compose
+        run: |
           sudo apt-get update
           sudo apt-get install -y docker-compose
-      - run: |
+      - name: Subir os serviços do SmartBeat (Postgres e PGAdmin)
+        run: |
           cd smartbit
           docker-compose up -d
           echo "Aguardando os serviços subirem..."
           sleep 20
-      - run: docker ps -a
+      - name: Verificar se os containers estão rodando
+        run: docker ps -a
+      - name: Upload ambiente com containers rodando
+        uses: actions/upload-artifact@v4
+        with:
+          name: smartbit-containers
+          path: smartbit
 
   setup_dependencies:
     name: Instalar dependências da API e Web
     runs-on: ubuntu-latest
     needs: setup_docker
     steps:
-      - uses: actions/checkout@v4
-      - run: git clone https://github.com/dennis001/Ambiente-Robot-Web-V1.git smartbit
-      - run: |
+      - name: Baixar ambiente com containers rodando
+        uses: actions/download-artifact@v4
+        with:
+          name: smartbit-containers
+          path: .
+      - name: Instalar dependências da API
+        run: |
           cd smartbit/api
           npm install
-      - run: |
+      - name: Instalar dependências da Web
+        run: |
           cd smartbit/web
           npm install
+      - name: Upload ambiente com dependências instaladas
+        uses: actions/upload-artifact@v4
+        with:
+          name: smartbit-deps
+          path: smartbit
 
   setup_api_web:
     name: Rodar setup e subir API/Web
     runs-on: ubuntu-latest
     needs: setup_dependencies
     steps:
-      - uses: actions/checkout@v4
-      - run: git clone https://github.com/dennis001/Ambiente-Robot-Web-V1.git smartbit
-      - run: |
+      - name: Baixar ambiente com dependências instaladas
+        uses: actions/download-artifact@v4
+        with:
+          name: smartbit-deps
+          path: .
+      - name: Rodar setup da API
+        run: |
           cd smartbit/api
           chmod +x setup.sh
           ./setup.sh
-      - run: |
+      - name: Subir a API
+        run: |
           cd smartbit/api
           nohup npm run dev &
-      - run: |
+      - name: Subir a Web
+        run: |
           cd smartbit/web
           nohup npm run dev &
-      - run: sleep 20
-      - run: docker ps -a
+      - name: Aguardar serviços da API e Web subirem
+        run: sleep 20
+      - name: Upload ambiente rodando
+        uses: actions/upload-artifact@v4
+        with:
+          name: smartbit-running
+          path: smartbit
 
   test:
     name: Instalar Robot Framework e Executar Testes
     runs-on: ubuntu-latest
     needs: setup_api_web
     steps:
-      - uses: actions/checkout@v4
-      - run: git clone https://github.com/dennis001/Ambiente-Robot-Web-V1.git smartbit
-      - run: |
+      - name: Baixar ambiente rodando
+        uses: actions/download-artifact@v4
+        with:
+          name: smartbit-running
+          path: .
+      - name: Instalar dependências do Robot Framework
+        run: |
           pip install robotframework
           pip install -r requirements.txt
-      - run: robot -d results tests/
-      - uses: actions/upload-artifact@v4
+      - name: Executar os testes automatizados
+        run: robot -d results tests/
+      - name: Upload dos resultados dos testes
+        uses: actions/upload-artifact@v4
         with:
           name: robot-results
           path: results/
@@ -93,8 +131,12 @@ jobs:
     runs-on: ubuntu-latest
     needs: test
     steps:
-      - uses: actions/checkout@v4
-      - run: git clone https://github.com/dennis001/Ambiente-Robot-Web-V1.git smartbit
-      - run: |
+      - name: Baixar ambiente rodando
+        uses: actions/download-artifact@v4
+        with:
+          name: smartbit-running
+          path: .
+      - name: Derrubar os containers do SmartBeat
+        run: |
           cd smartbit
           docker-compose down
