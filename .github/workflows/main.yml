@@ -20,6 +20,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: git clone https://github.com/dennis001/Ambiente-Robot-Web-V1.git smartbit
+      - uses: actions/upload-artifact@v4
+        with:
+          name: smartbit
+          path: smartbit
 
   setup_docker:
     name: Instalar Docker e subir serviços
@@ -27,6 +31,9 @@ jobs:
     needs: clone_smartbeat
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: smartbit
       - run: |
           sudo apt-get update
           sudo apt-get install -y docker-compose
@@ -43,6 +50,9 @@ jobs:
     needs: setup_docker
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: smartbit
       - run: |
           cd smartbit/api
           npm install
@@ -56,6 +66,9 @@ jobs:
     needs: setup_dependencies
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: smartbit
       - run: |
           cd smartbit/api
           chmod +x setup.sh
@@ -75,6 +88,9 @@ jobs:
     needs: setup_api_web
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: smartbit
       - run: |
           pip install robotframework
           pip install -r requirements.txt
@@ -90,6 +106,9 @@ jobs:
     needs: test
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: smartbit
       - run: |
           cd smartbit
           docker-compose down
