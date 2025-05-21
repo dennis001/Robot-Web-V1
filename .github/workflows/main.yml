@@ -79,6 +79,7 @@ jobs:
           name: smartbit
       - run: |
           cd api
+          npm install
           chmod +x setup.sh
           ./setup.sh
       - run: |
