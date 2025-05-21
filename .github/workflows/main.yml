@@ -39,7 +39,6 @@ jobs:
           name: smartbit
       - run: |
           ls -la
-          cd smartbit
           docker-compose up -d
           echo "Aguardando os serviços subirem..."
           sleep 20
