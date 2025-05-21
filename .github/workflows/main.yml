@@ -43,6 +43,10 @@ jobs:
           echo "Aguardando os serviços subirem..."
           sleep 20
       - run: docker ps -a
+      - uses: actions/upload-artifact@v4
+        with:
+          name: smartbit
+          path: smartbit
 
   setup_dependencies:
     name: Instalar dependências da API e Web
@@ -54,11 +58,15 @@ jobs:
         with:
           name: smartbit
       - run: |
-          cd smartbit/api
+          cd api
           npm install
       - run: |
-          cd smartbit/web
+          cd web
           npm install
+      - uses: actions/upload-artifact@v4
+        with:
+          name: smartbit
+          path: smartbit
 
   setup_api_web:
     name: Rodar setup e subir API/Web
@@ -70,17 +78,21 @@ jobs:
         with:
           name: smartbit
       - run: |
-          cd smartbit/api
+          cd api
           chmod +x setup.sh
           ./setup.sh
       - run: |
-          cd smartbit/api
+          cd api
           nohup npm run dev &
       - run: |
-          cd smartbit/web
+          cd web
           nohup npm run dev &
       - run: sleep 20
       - run: docker ps -a
+      - uses: actions/upload-artifact@v4
+        with:
+          name: smartbit
+          path: smartbit
 
   test:
     name: Instalar Robot Framework e Executar Testes
@@ -99,6 +111,10 @@ jobs:
         with:
           name: robot-results
           path: results/
+      - uses: actions/upload-artifact@v4
+        with:
+          name: smartbit
+          path: smartbit
 
   cleanup:
     name: Derrubar os containers do SmartBeat
