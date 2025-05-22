@@ -82,7 +82,7 @@ jobs:
           npm install
           chmod +x setup.sh
           ./setup.sh
-          continue-on-error: true
+        continue-on-error: true
       - run: |
           cd api
           nohup npm run dev > ../api.log 2>&1 &
