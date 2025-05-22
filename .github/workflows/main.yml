@@ -83,20 +83,20 @@ jobs:
           chmod +x setup.sh
           ./setup.sh
         continue-on-error: true
-      - uses: actions/upload-artifact@v4
-        with:
-          name: smartbit
-          path: smartbit
+#      - uses: actions/upload-artifact@v4
+ #       with:
+  #        name: smartbit
+   #       path: smartbit
 
-  test:
-    name: Instalar Robot Framework e Executar Testes
-    runs-on: ubuntu-latest
-    needs: setup_api_web
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/download-artifact@v4
-        with:
-          name: smartbit
+ # test:
+  #  name: Instalar Robot Framework e Executar Testes
+   # runs-on: ubuntu-latest
+    #needs: setup_api_web
+   # steps:
+    #  - uses: actions/checkout@v4
+     # - uses: actions/download-artifact@v4
+      #  with:
+       #   name: smartbit
       - run: |
           cd api
           nohup npm run dev > ../api.log 2>&1 &
